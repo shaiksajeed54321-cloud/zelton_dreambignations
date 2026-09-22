@@ -1,0 +1,41 @@
+.organizer {
+  position: relative;
+  background: linear-gradient(135deg, var(--dark) 0%, #171a20 45%, var(--sky-dark) 100%);
+  padding: 110px 0;
+}
+
+.organizer__content {
+  position: relative;
+  z-index: 2;
+  max-width: 720px;
+  color: var(--white);
+}
+
+.organizer__content h2 {
+  color: var(--white);
+  font-size: 36px;
+}
+
+.organizer__content p {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.organizer__highlights {
+  margin: 24px 0 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.organizer__highlights li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--white);
+  font-weight: 500;
+}
+
+.organizer__highlights svg {
+  color: var(--sky-accent);
+  flex-shrink: 0;
+}

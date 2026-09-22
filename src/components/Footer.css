@@ -1,0 +1,10 @@
+.site-footer {
+  background: var(--dark-2);
+  padding: 24px 0;
+  text-align: center;
+}
+
+.site-footer span {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 14px;
+}

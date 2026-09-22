@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-Command chromium-cli -ErrorAction SilentlyContinue; Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue | Where-Object {$_.LocalPort -in 5173,5174,3000,4173} | Select-Object LocalPort,OwningProcess)",
+      "PowerShell(Get-CimInstance Win32_Process -Filter \"ProcessId=3180\")",
+      "PowerShell(Remove-Item -Path \"d:\\\\My Market\\\\src\\\\pages\\\\UpscDoc.tsx\" -Confirm:$false)",
+      "PowerShell(Get-Command chromium-cli, playwright -ErrorAction SilentlyContinue)",
+      "PowerShell(Remove-Item -Path \"d:\\\\millio\\\\zelton\\\\src\\\\lib\\\\googleDrive.ts\" -Confirm:$false)",
+      "PowerShell($r = Invoke-WebRequest -Uri \"http://localhost:5173/src/pages/UpscDoc.tsx\" -UseBasicParsing; \"UpscDoc.tsx: $\\($r.StatusCode\\)\")"
+    ]
+  }
+}

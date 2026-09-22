@@ -1,0 +1,79 @@
+.carousel {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+}
+
+.carousel__viewport {
+  overflow: hidden;
+}
+
+.carousel__track {
+  display: flex;
+  transition: transform 0.5s ease;
+}
+
+.carousel__track img {
+  width: 100%;
+  flex-shrink: 0;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+
+.carousel__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--dark-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.carousel__arrow:hover {
+  background: var(--sky);
+  color: var(--white);
+}
+
+.carousel__arrow--prev {
+  left: 14px;
+}
+
+.carousel__arrow--next {
+  right: 14px;
+}
+
+.carousel__dots {
+  position: absolute;
+  bottom: 14px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.carousel__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  padding: 0;
+}
+
+.carousel__dot.is-active {
+  background: var(--sky);
+  width: 22px;
+  border-radius: 4px;
+}

@@ -1,0 +1,165 @@
+:root {
+  --sky: #000080;
+  --sky-dark: #00005c;
+  --sky-accent: #3a5fcd;
+  --dark: #25282e;
+  --dark-2: #343434;
+  --gray: #555555;
+  --gray-2: #777777;
+  --gray-3: #999999;
+  --border: #eeeeee;
+  --white: #ffffff;
+
+  --font-body: "Archivo", sans-serif;
+  --font-heading: "Lora", serif;
+
+  --container-w: 1200px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--gray);
+  background: var(--white);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  color: var(--dark);
+  margin: 0 0 16px;
+  line-height: 1.3;
+  font-weight: 600;
+}
+
+p {
+  margin: 0 0 16px;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+button {
+  font-family: inherit;
+}
+
+.container {
+  max-width: var(--container-w);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.section {
+  padding: 90px 0;
+}
+
+@media (max-width: 767px) {
+  .section {
+    padding: 56px 0;
+  }
+}
+
+.eyebrow {
+  display: inline-block;
+  font-family: var(--font-heading);
+  color: var(--sky);
+  font-size: 16px;
+  font-style: italic;
+  margin-bottom: 8px;
+}
+
+.section-heading {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto 48px;
+}
+
+.section-heading h2 {
+  font-size: 36px;
+}
+
+.section-heading p {
+  color: var(--gray-2);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--sky);
+  color: var(--white);
+  border: none;
+  border-radius: 5px;
+  padding: 15px 30px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn:hover {
+  background: var(--sky-dark);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--dark-2);
+  color: var(--dark-2);
+}
+
+.btn-outline:hover {
+  background: var(--dark-2);
+  color: var(--white);
+  border-color: var(--dark-2);
+}
+
+.btn-light {
+  background: var(--white);
+  color: var(--dark-2);
+}
+
+.btn-light:hover {
+  background: var(--sky);
+  color: var(--white);
+}
+
+.btn-lg {
+  padding: 18px 44px;
+  font-size: 16px;
+}
+
+::selection {
+  background: var(--sky);
+  color: var(--white);
+}

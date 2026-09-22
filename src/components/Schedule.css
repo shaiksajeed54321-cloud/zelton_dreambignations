@@ -1,0 +1,136 @@
+.schedule__grid {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 60px;
+  align-items: start;
+}
+
+.schedule__intro {
+  position: sticky;
+  top: 120px;
+}
+
+.schedule__intro h2 {
+  font-size: 40px;
+}
+
+.schedule__intro p {
+  color: var(--gray-2);
+  margin-bottom: 28px;
+}
+
+.schedule__date-heading {
+  font-size: 24px;
+  margin-bottom: 24px;
+}
+
+.schedule__list {
+  border-left: 2px solid var(--border);
+}
+
+.schedule__item {
+  position: relative;
+  padding-left: 28px;
+  margin-bottom: 4px;
+}
+
+.schedule__item::before {
+  content: "";
+  position: absolute;
+  left: -6px;
+  top: 22px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--border);
+  border: 2px solid var(--white);
+}
+
+.schedule__item.is-open::before {
+  background: var(--sky);
+}
+
+.schedule__item-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 16px 8px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+}
+
+.schedule__item-header:disabled {
+  cursor: default;
+}
+
+.schedule__time {
+  flex-shrink: 0;
+  width: 84px;
+  font-family: var(--font-heading);
+  color: var(--sky);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.schedule__title {
+  flex: 1;
+  color: var(--dark-2);
+  font-weight: 500;
+}
+
+.schedule__chevron {
+  color: var(--gray-3);
+  transition: transform 0.25s ease;
+  flex-shrink: 0;
+}
+
+.schedule__item.is-open .schedule__chevron {
+  transform: rotate(180deg);
+  color: var(--sky);
+}
+
+.schedule__detail {
+  padding: 4px 8px 20px 102px;
+  color: var(--gray-2);
+  font-size: 14.5px;
+  animation: schedule-open 0.25s ease;
+}
+
+.schedule__detail ul {
+  list-style: disc;
+  padding-left: 18px;
+}
+
+.schedule__detail li {
+  margin-bottom: 8px;
+}
+
+@keyframes schedule-open {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 900px) {
+  .schedule__grid {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  .schedule__intro {
+    position: static;
+  }
+
+  .schedule__detail {
+    padding-left: 28px;
+  }
+}
