@@ -47,7 +47,7 @@ export default function StudyMaterials() {
         <section className="study-materials-hero">
           <div className="container">
             <span className="eyebrow">Resources</span>
-            <h1>Study Materials</h1>
+            <h1>BeReady</h1>
             <p>Educational resources shared by the Zelton team to support your preparation.</p>
           </div>
         </section>
