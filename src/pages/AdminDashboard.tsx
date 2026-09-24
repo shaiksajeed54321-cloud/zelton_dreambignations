@@ -1053,7 +1053,7 @@ export default function AdminDashboard() {
         <div className="admin-dashboard__uploads">
           <FileManager
             title="Documents Upload"
-            description="Files uploaded here appear under BeReady → UPSC DOC for all visitors."
+            description="Files uploaded here appear under Study Materials → UPSC DOC for all visitors."
             category="upsc"
             icon={<FiFileText size={20} />}
             accent="docs"
