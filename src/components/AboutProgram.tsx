@@ -16,14 +16,14 @@ export default function AboutProgram() {
 
         <div className="about-program__copy">
           <h1 className="about-program__title">About Our Mentorship Program</h1>
-          <h2 className="about-program__subtitle">
+          <p className="about-program__subtitle">
             The Dream Big Nation Mentorship Program connects college students with accomplished
             civil servants, academicians, and professionals to inspire early goal setting and
             career clarity. Through monthly interactive sessions, students gain exposure to
             real-life success stories and practical guidance from experienced mentors.
-          </h2>
+          </p>
 
-          <p>
+          <p className="about-program__subtitle">
             This initiative focuses on helping students identify their passions early, set
             ambitious goals, and build a roadmap to achieve them. With the support of respected
             IAS and IRS officers, professors, and thought leaders, the program nurtures
@@ -35,7 +35,7 @@ export default function AboutProgram() {
             <Link className="btn" to="/register">
               Register Now
             </Link>
-            <a className="btn btn-outline" href="/#organizer">
+            <a className="btn btn-outline" href="#organizer">
               Know More
             </a>
           </div>

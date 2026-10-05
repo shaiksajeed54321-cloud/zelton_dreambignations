@@ -24,7 +24,7 @@ export default function AboutOrganizer() {
           ))}
         </ul>
 
-        <a className="btn btn-light" href="/#organizer">
+        <a className="btn btn-light" href="#organizer">
           Know More
         </a>
       </div>

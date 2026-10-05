@@ -952,7 +952,8 @@
   flex-shrink: 0;
 }
 
-.admin-login__input input {
+.admin-login__input input,
+.admin-login__input textarea {
   border: none;
   outline: none;
   width: 100%;
@@ -1103,4 +1104,90 @@
   .admin-card--details {
     padding: 22px;
   }
+}
+
+/* Multi-line address field: wraps long locations so the full text is visible and editable */
+.admin-login__input textarea {
+  resize: vertical;
+  min-height: 72px;
+  line-height: 1.5;
+}
+
+/* Schedule editor */
+.admin-schedule__list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.admin-schedule__item {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.admin-schedule__top {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.admin-schedule__time {
+  flex: 0 0 130px;
+}
+
+.admin-schedule__title {
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-schedule__actions {
+  display: flex;
+  gap: 6px;
+  padding-bottom: 6px;
+}
+
+.admin-schedule__icon-btn {
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--dark-2);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-schedule__icon-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.admin-schedule__footer {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 640px) {
+  .admin-schedule__time,
+  .admin-schedule__title {
+    flex: 1 1 100%;
+  }
+
+  .admin-schedule__top {
+    flex-wrap: wrap;
+  }
+}
+
+.admin-schedule__date {
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border);
 }

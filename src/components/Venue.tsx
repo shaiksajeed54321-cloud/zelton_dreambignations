@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { NEAR_AMENITIES, VENUE_MAP_URL } from "../data/content";
+import { NEAR_AMENITIES } from "../data/content";
+import { useEventInfo } from "../lib/eventInfo";
 import "./Venue.css";
 
 const TABS = ["Venue & Time", "Near Amenities"] as const;
 
 export default function Venue() {
+  const event = useEventInfo();
   const [active, setActive] = useState<(typeof TABS)[number]>(TABS[0]);
 
   return (
@@ -17,6 +19,9 @@ export default function Venue() {
             <div className="venue__tab-list">
               {TABS.map((tab) => (
                 <button
+                  type="button"
+                  role="tab"
+                  aria-selected={active === tab}
                   key={tab}
                   className={`venue__tab ${active === tab ? "is-active" : ""}`}
                   onClick={() => setActive(tab)}
@@ -29,12 +34,11 @@ export default function Venue() {
             <div className="venue__tab-panel">
               {active === "Venue & Time" ? (
                 <p>
-                  <b>Date</b>: 25th April 2026
+                  <b>Date</b>: {event.dateOrdinal}
                   <br />
-                  <b>Time</b>: 09:00 AM &ndash; 1:00 PM
+                  <b>Time</b>: {event.timeRange}
                   <br />
-                  <b>Location</b>: MBA Seminar Hall, Al Ameen Educational Campus, Hosur Main
-                  Road, Opposite to Lalbagh Main Gate, Bengaluru-560027.
+                  <b>Location</b>: {event.venueName}, {event.address}.
                 </p>
               ) : (
                 <ul className="venue__amenities">
@@ -45,11 +49,20 @@ export default function Venue() {
               )}
             </div>
           </div>
+
+          <a
+            className="btn venue__directions"
+            href={event.directionsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Get Directions
+          </a>
         </div>
 
         <div className="venue__map">
           <iframe
-            src={VENUE_MAP_URL}
+            src={event.mapUrl}
             title="Event venue map"
             loading="lazy"
             allowFullScreen

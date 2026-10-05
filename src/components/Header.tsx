@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { FiChevronDown, FiLock, FiMenu, FiX } from "react-icons/fi";
 import { Link } from "react-router-dom";
-import { LOGO_URL, NAV_LINKS } from "../data/content";
+import { NAV_LINKS } from "../data/content";
 import "./Header.css";
 
 export default function Header() {
@@ -27,6 +27,21 @@ export default function Header() {
     return () => document.removeEventListener("mousedown", onClickOutside);
   }, []);
 
+  // Close the menu with the Escape key.
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setNavOpen(false);
+        setOpenSubmenu(null);
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, []);
+
+  const toggleSubmenu = (label: string) =>
+    setOpenSubmenu((current) => (current === label ? null : label));
+
   const closeAll = () => {
     setNavOpen(false);
     setOpenSubmenu(null);
@@ -35,9 +50,10 @@ export default function Header() {
   return (
     <header className={`site-header ${scrolled ? "is-scrolled" : ""}`}>
       <div className="container site-header__inner">
-        <a href="/#home" className="site-header__logo">
-          <img src={LOGO_URL} alt="DREAM BIG NATION" />
-        </a>
+        <Link to="/#home" className="site-header__logo" aria-label="Dream Big Nation - Early Goal Setting" onClick={closeAll}>
+          <span className="site-header__brand-name">DREAM BIG NATION</span>
+          <span className="site-header__brand-tag">Early Goal Setting</span>
+        </Link>
 
         <nav ref={navRef} className={`site-nav ${navOpen ? "is-open" : ""}`}>
           <ul>
@@ -45,7 +61,14 @@ export default function Header() {
               link.children ? (
                 <li key={link.label} className="site-nav__item has-submenu">
                   <span className="site-nav__parent">
-                    <a href={link.href} onClick={closeAll}>
+                    <a
+                      href={link.href}
+                      onClick={(event) => {
+                        // The parent label only opens/closes its submenu; it has no page of its own.
+                        event.preventDefault();
+                        toggleSubmenu(link.label);
+                      }}
+                    >
                       {link.label}
                     </a>
                     <button
@@ -54,9 +77,7 @@ export default function Header() {
                       aria-haspopup="true"
                       aria-expanded={openSubmenu === link.label}
                       aria-label={`Toggle ${link.label} submenu`}
-                      onClick={() =>
-                        setOpenSubmenu((current) => (current === link.label ? null : link.label))
-                      }
+                      onClick={() => toggleSubmenu(link.label)}
                     >
                       <FiChevronDown className={openSubmenu === link.label ? "is-open" : ""} />
                     </button>
@@ -66,15 +87,9 @@ export default function Header() {
                     <ul className="site-nav__submenu" role="menu">
                       {link.children.map((sub) => (
                         <li key={sub.label} role="none">
-                          {sub.to ? (
-                            <Link role="menuitem" to={sub.to} onClick={closeAll}>
-                              {sub.label}
-                            </Link>
-                          ) : (
-                            <a role="menuitem" href={sub.href} onClick={closeAll}>
-                              {sub.label}
-                            </a>
-                          )}
+                          <Link role="menuitem" to={sub.to ?? sub.href ?? "/"} onClick={closeAll}>
+                            {sub.label}
+                          </Link>
                         </li>
                       ))}
                     </ul>
@@ -88,9 +103,9 @@ export default function Header() {
                 </li>
               ) : (
                 <li key={link.label}>
-                  <a href={link.href} onClick={closeAll}>
+                  <Link to={link.href} onClick={closeAll}>
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               )
             )}
@@ -125,6 +140,7 @@ export default function Header() {
         <button
           className="site-header__toggle"
           aria-label="Toggle navigation"
+          aria-expanded={navOpen}
           onClick={() => setNavOpen((v) => !v)}
         >
           {navOpen ? <FiX /> : <FiMenu />}

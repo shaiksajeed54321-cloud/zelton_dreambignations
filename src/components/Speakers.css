@@ -60,3 +60,37 @@
     gap: 28px 18px;
   }
 }
+
+.speakers__grid > *,
+.speaker-card {
+  min-width: 0;
+}
+
+.speaker-card__photo img {
+  object-position: center top;
+}
+
+.speaker-card__name,
+.speaker-card__role {
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 560px) {
+  .section-heading h2 {
+    font-size: 24px;
+  }
+
+  .speaker-card__name {
+    font-size: 16px;
+  }
+
+  .speaker-card__role {
+    font-size: 13px;
+    padding: 0;
+  }
+
+  .speakers__more .btn {
+    white-space: normal;
+    text-align: center;
+  }
+}

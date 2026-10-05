@@ -1,29 +1,28 @@
 import { useEffect, useState } from "react";
-import { FiClock, FiMapPin } from "react-icons/fi";
+import { FiClock, FiMapPin, FiShare2 } from "react-icons/fi";
 import { Link } from "react-router-dom";
-import { EVENT_DATE_ISO, HERO_BG_URL } from "../data/content";
+import { HERO_BG_URL } from "../data/content";
+import { useEventInfo } from "../lib/eventInfo";
 import { useCountdown } from "../hooks/useCountdown";
+import { shareSite } from "../lib/share";
 import { getHomeInfo } from "../lib/homeApi";
 import "./Hero.css";
 
-function formatEventDate(value: string): string {
-  const date = new Date(`${value}T00:00:00`);
-  if (Number.isNaN(date.getTime())) {
-    return value;
-  }
-  return date.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
-}
-
 export default function Hero() {
-  const { days, hours, minutes, seconds } = useCountdown(EVENT_DATE_ISO);
   const [state, setState] = useState<string | null>(null);
-  const [eventDate, setEventDate] = useState<string | null>(null);
+  const [shareMessage, setShareMessage] = useState("");
+  const event = useEventInfo();
+  const { days, hours, minutes, seconds, finished } = useCountdown(event.iso);
+
+  const handleShare = async () => {
+    setShareMessage(await shareSite());
+    window.setTimeout(() => setShareMessage(""), 3000);
+  };
 
   useEffect(() => {
     getHomeInfo()
       .then((info) => {
         setState(info?.state ?? null);
-        setEventDate(info?.eventdate ?? null);
       })
       .catch(() => setState(null));
   }, []);
@@ -33,11 +32,9 @@ export default function Hero() {
       <div className="hero__overlay" />
       <div className="container hero__content">
         <div className="hero__meta">
-           {eventDate && (
-            <span>
-              <FiClock /> {formatEventDate(eventDate)}
-            </span>
-          )}
+          <span>
+            <FiClock /> {event.dateShort}
+          </span>
          
           {state && (
             <span>
@@ -46,13 +43,16 @@ export default function Hero() {
           )}
         </div>
 
-        <h1 className="hero__title">DREAM BIG MENTORS MEET BENGALURU-2026</h1>
+        <h1 className="hero__title">{event.name.toUpperCase()}</h1>
         <p className="hero__subtitle">No Student Should Be Left Unguided</p>
 
         <Link className="btn btn-lg hero__cta" to="/register">
           Register Now
         </Link>
 
+        {finished ? (
+          <p className="hero__countdown-done">Event Started</p>
+        ) : (
         <div className="hero__countdown">
           {[
             { label: "Days", value: days },
@@ -66,6 +66,14 @@ export default function Hero() {
             </div>
           ))}
         </div>
+        )}
+
+        <button type="button" className="hero__share" onClick={handleShare}>
+          <FiShare2 /> Share
+        </button>
+        <p className="hero__share-msg" role="status" aria-live="polite">
+          {shareMessage}
+        </p>
       </div>
     </section>
   );

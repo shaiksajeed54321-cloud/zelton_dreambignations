@@ -1,5 +1,6 @@
 import AboutOrganizer from "../components/AboutOrganizer";
 import AboutProgram from "../components/AboutProgram";
+import CareerGoals from "../components/CareerGoals";
 import CtaBanner from "../components/CtaBanner";
 import Footer from "../components/Footer";
 import Gallery from "../components/Gallery";
@@ -18,6 +19,7 @@ export default function Home() {
         <Hero />
         <AboutProgram />
         <Stats />
+        <CareerGoals />
         <Schedule />
         <AboutOrganizer />
         <Gallery />

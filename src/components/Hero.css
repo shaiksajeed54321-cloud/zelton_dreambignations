@@ -119,3 +119,52 @@
     font-size: 22px;
   }
 }
+
+.hero__countdown-done {
+  font-family: var(--font-heading);
+  font-size: 30px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.hero__share {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  margin-top: 28px;
+  padding: 10px 22px;
+  font-size: 15px;
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.hero__share:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.hero__share-msg {
+  min-height: 24px;
+  margin: 10px 0 0;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 400px) {
+  .hero__countdown {
+    gap: 8px;
+  }
+
+  .hero__countdown-item {
+    width: 64px;
+    height: 64px;
+  }
+
+  .hero__countdown-label {
+    font-size: 10px;
+  }
+}

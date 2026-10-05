@@ -47,3 +47,33 @@
     height: 380px;
   }
 }
+
+.about-program__grid > * {
+  min-width: 0;
+}
+
+/* Bolder, darker, larger copy so it reads clearly */
+.about-program__subtitle {
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--dark);
+}
+
+.about-program__copy .about-program__subtitle {
+  margin: 0 0 18px;
+}
+
+@media (max-width: 600px) {
+  .about-program__title {
+    font-size: 26px;
+  }
+
+  .about-program__subtitle {
+    font-size: 17px;
+  }
+
+  .about-program__media iframe {
+    height: auto;
+    aspect-ratio: 16 / 10;
+  }
+}

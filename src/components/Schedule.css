@@ -134,3 +134,17 @@
     padding-left: 28px;
   }
 }
+
+.schedule__grid > * {
+  min-width: 0;
+}
+
+@media (max-width: 600px) {
+  .schedule__intro h2 {
+    font-size: 32px;
+  }
+
+  .schedule__date-heading {
+    font-size: 20px;
+  }
+}

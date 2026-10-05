@@ -3,6 +3,11 @@ export interface HomeInfo {
   state: string;
   eventdate: string;
   punchLine: string;
+  // Optional (empty = use the defaults in data/content.ts)
+  starttime?: string;
+  endtime?: string;
+  venue?: string;
+  address?: string;
 }
 
 interface HomeResponse {
@@ -24,7 +29,7 @@ export async function getHomeInfo(): Promise<HomeInfo | null> {
 
 export async function updateHomeInfo(
   id: number,
-  fields: Pick<HomeInfo, "state" | "eventdate">,
+  fields: Pick<HomeInfo, "state" | "eventdate" | "starttime" | "endtime" | "venue" | "address">,
 ): Promise<HomeInfo> {
   const res = await fetch(`${API_BASE}/update_home.php`, {
     method: "POST",
