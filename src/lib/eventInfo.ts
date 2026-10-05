@@ -50,6 +50,7 @@ export interface EventInfo {
   dateShort: string; // 25 April 2026
   dateLong: string; // Saturday, 25 April 2026
   dateOrdinal: string; // 25th April 2026
+  venueDateOrdinal: string; // the Venue & Time section's own date (defaults to the event date)
   timeRange: string; // 09:00 AM - 01:00 PM
   mapUrl: string; // embedded map
   directionsUrl: string; // opens Google Maps / Maps app
@@ -69,6 +70,8 @@ export function buildEventInfo(saved: HomeInfo | null): EventInfo {
     date = EVENT.date;
     iso = `${date}T${startTime}:00${IST}`;
   }
+  const venueMatch = saved?.venuedate?.match(/^(\d{4}-\d{2}-\d{2})$/);
+  const venueDate = venueMatch && !Number.isNaN(new Date(`${venueMatch[1]}T12:00:00Z`).getTime()) ? venueMatch[1] : date;
   const query = encodeURIComponent(`${venueName}, ${address}`);
 
   return {
@@ -78,6 +81,7 @@ export function buildEventInfo(saved: HomeInfo | null): EventInfo {
     address,
     iso,
     ...formatEventDate(date),
+    venueDateOrdinal: formatEventDate(venueDate).dateOrdinal,
     timeRange: `${to12Hour(startTime)} – ${to12Hour(endTime)}`,
     mapUrl: `https://maps.google.com/maps?q=${query}&t=m&z=14&output=embed&iwloc=near`,
     directionsUrl: EVENT.mapsLink || `https://www.google.com/maps/dir/?api=1&destination=${query}`,
