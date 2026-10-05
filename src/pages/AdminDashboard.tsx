@@ -74,11 +74,15 @@ function AdminLoginForm({ onLogin }: { onLogin: () => void }) {
 
   return (
     <div className="admin-login">
-      <div className="admin-login__card">
+      <div className="admin-login__brand">
         <Link to="/" className="admin-login__logo">
           <img src={LOGO_URL} alt="DREAM BIG NATION" />
         </Link>
+        <h2>Admin Panel</h2>
+        <p>Manage documents, event details, the schedule and registrations.</p>
+      </div>
 
+      <div className="admin-login__card">
         <h1>Admin Login</h1>
         <p className="admin-login__subtitle">Sign in to manage the site.</p>
 
@@ -600,12 +604,14 @@ function FileManager({
   );
 }
 
-function HomeDetailsSection() {
+// `between` is rendered after the Homepage Details card and before the Venue & Time card.
+function HomeDetailsSection({ between }: { between?: ReactNode }) {
   const [home, setHome] = useState<HomeInfo | null>(null);
   const [state, setState] = useState("");
   const [eventDate, setEventDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
+  const [venueDate, setVenueDate] = useState("");
   const [venue, setVenue] = useState("");
   const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(true);
@@ -619,6 +625,7 @@ function HomeDetailsSection() {
         setHome(info);
         setState(info?.state ?? "");
         setEventDate(info?.eventdate ?? "");
+        setVenueDate(info?.venuedate || info?.eventdate || "");
         setStartTime(info?.starttime ?? "");
         setEndTime(info?.endtime ?? "");
         setVenue(info?.venue?.trim() || EVENT.venueName);
@@ -647,12 +654,14 @@ function HomeDetailsSection() {
         endtime: section === "venue" ? endTime : base.endtime ?? "",
         venue: section === "venue" ? venue : base.venue ?? "",
         address: section === "venue" ? address : base.address ?? "",
+        venuedate: section === "venue" ? venueDate : base.venuedate ?? "",
       });
       setHome(updated);
       if (section === "details") {
         setState(updated.state);
         setEventDate(updated.eventdate);
       } else {
+        setVenueDate(updated.venuedate || updated.eventdate);
         setStartTime(updated.starttime ?? "");
         setEndTime(updated.endtime ?? "");
         setVenue(updated.venue?.trim() || EVENT.venueName);
@@ -669,6 +678,7 @@ function HomeDetailsSection() {
   const detailsUnchanged = home !== null && state === home.state && eventDate === home.eventdate;
   const venueUnchanged =
     home !== null &&
+    venueDate === (home.venuedate || home.eventdate) &&
     startTime === (home.starttime ?? "") &&
     endTime === (home.endtime ?? "") &&
     venue === (home.venue?.trim() || EVENT.venueName) &&
@@ -744,6 +754,8 @@ function HomeDetailsSection() {
         )}
       </section>
 
+      {between}
+
       <section className="admin-card admin-card--details">
         <div className="admin-card__header">
           <span className="admin-card__icon">
@@ -751,7 +763,7 @@ function HomeDetailsSection() {
           </span>
           <div className="admin-card__heading">
             <h2>Venue &amp; Time</h2>
-            <p className="admin-card__desc">The event time, venue and address. They update the schedule, venue section and map. Leave empty to use the website defaults.</p>
+            <p className="admin-card__desc">The date, time, venue and address shown in the Venue section (this date is separate from the event date above). They update the schedule, venue section and map. Leave empty to use the website defaults.</p>
           </div>
         </div>
 
@@ -762,6 +774,13 @@ function HomeDetailsSection() {
               void save("venue", e);
             }}
           >
+            <label className="admin-login__field">
+              <span>Venue &amp; Time date</span>
+              <div className="admin-login__input">
+                <input type="date" name="venuedate" value={venueDate} onChange={field(setVenueDate)} required />
+              </div>
+            </label>
+
             <div className="admin-home__row">
               <label className="admin-login__field">
                 <span>Start time</span>
@@ -1425,8 +1444,7 @@ export default function AdminDashboard() {
           />
         </div>
 
-        <HomeDetailsSection />
-        <ScheduleSection />
+        <HomeDetailsSection between={<ScheduleSection />} />
         <RegistrationsSection />
       </div>
     </div>

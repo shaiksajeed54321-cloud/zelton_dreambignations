@@ -34,7 +34,7 @@ export default function Venue() {
             <div className="venue__tab-panel">
               {active === "Venue & Time" ? (
                 <p>
-                  <b>Date</b>: {event.dateOrdinal}
+                  <b>Date</b>: {event.venueDateOrdinal}
                   <br />
                   <b>Time</b>: {event.timeRange}
                   <br />

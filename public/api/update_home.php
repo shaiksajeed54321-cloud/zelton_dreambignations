@@ -48,6 +48,13 @@ $endtime = trim((string) ($body['endtime'] ?? ''));
 $venue = trim((string) ($body['venue'] ?? ''));
 $address = trim((string) ($body['address'] ?? ''));
 
+// The Venue & Time section's own date (YYYY-MM-DD); only changed when sent, empty = follow the event date.
+$setVenueDate = array_key_exists('venuedate', $body);
+$venuedate = trim((string) ($body['venuedate'] ?? ''));
+if ($venuedate !== '' && (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $venuedate) || !strtotime($venuedate))) {
+    json_response(['error' => 'Venue date must be in YYYY-MM-DD format.'], 400);
+}
+
 foreach ([$starttime, $endtime] as $time) {
     if ($time !== '' && !preg_match('/^([01]\d|2[0-3]):[0-5]\d$/', $time)) {
         json_response(['error' => 'Times must be in HH:mm format.'], 400);
@@ -85,6 +92,11 @@ try {
         ':state' => $state, ':eventdate' => $eventdate, ':starttime' => $starttime,
         ':endtime' => $endtime, ':venue' => $venue, ':address' => $address, ':id' => $id,
     ]);
+
+    if ($setVenueDate) {
+        $stmt = $pdo->prepare('UPDATE home SET venuedate = :d WHERE id = :id');
+        $stmt->execute([':d' => $venuedate, ':id' => $id]);
+    }
 
     // rowCount() is 0 when the values were unchanged, so confirm the row exists by re-reading it.
     $stmt = $pdo->prepare('SELECT * FROM home WHERE id = :id');
