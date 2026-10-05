@@ -30,7 +30,8 @@ import {
   FiX,
 } from "react-icons/fi";
 import { Link } from "react-router-dom";
-import { LOGO_URL } from "../data/content";
+import { LOGO_URL, SCHEDULE } from "../data/content";
+import type { ScheduleItem } from "../data/types";
 import { getUsername, isAuthenticated, login, logout } from "../lib/auth";
 import {
   ACCEPT_ATTR,
@@ -46,6 +47,8 @@ import {
   type StoredFile,
 } from "../lib/fileStore";
 import { getHomeInfo, updateHomeInfo, type HomeInfo } from "../lib/homeApi";
+import { getSavedSchedule, updateSchedule, updateScheduleDate } from "../lib/scheduleApi";
+import { EVENT } from "../data/content";
 import {
   getRegistrations,
   updateRegistration,
@@ -601,10 +604,14 @@ function HomeDetailsSection() {
   const [home, setHome] = useState<HomeInfo | null>(null);
   const [state, setState] = useState("");
   const [eventDate, setEventDate] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const [venue, setVenue] = useState("");
+  const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+  const [saving, setSaving] = useState<"" | "details" | "venue">("");
   const [error, setError] = useState("");
-  const [saved, setSaved] = useState(false);
+  const [saved, setSaved] = useState<"" | "details" | "venue">("");
 
   useEffect(() => {
     getHomeInfo()
@@ -612,33 +619,312 @@ function HomeDetailsSection() {
         setHome(info);
         setState(info?.state ?? "");
         setEventDate(info?.eventdate ?? "");
+        setStartTime(info?.starttime ?? "");
+        setEndTime(info?.endtime ?? "");
+        setVenue(info?.venue?.trim() || EVENT.venueName);
+        setAddress(info?.address?.trim() || EVENT.address);
       })
       .catch((err) => setError(err instanceof Error ? err.message : "Failed to load details."))
       .finally(() => setLoading(false));
   }, []);
 
-  const handleSubmit = async (e: FormEvent) => {
+  // Each card saves only its own fields; the other card's fields stay at their last saved values.
+  const save = async (section: "details" | "venue", e: FormEvent) => {
     e.preventDefault();
     if (!home) return;
 
-    setSaving(true);
-    setSaved(false);
+    setSaving(section);
+    setSaved("");
     setError("");
 
     try {
-      const updated = await updateHomeInfo(home.id, { state, eventdate: eventDate });
+      // Start from the latest saved row so a date saved in the Schedule card is never overwritten.
+      const base = (await getHomeInfo()) ?? home;
+      const updated = await updateHomeInfo(base.id, {
+        state: section === "details" ? state : base.state,
+        eventdate: section === "details" ? eventDate : base.eventdate,
+        starttime: section === "venue" ? startTime : base.starttime ?? "",
+        endtime: section === "venue" ? endTime : base.endtime ?? "",
+        venue: section === "venue" ? venue : base.venue ?? "",
+        address: section === "venue" ? address : base.address ?? "",
+      });
       setHome(updated);
-      setState(updated.state);
-      setEventDate(updated.eventdate);
-      setSaved(true);
+      if (section === "details") {
+        setState(updated.state);
+        setEventDate(updated.eventdate);
+      } else {
+        setStartTime(updated.starttime ?? "");
+        setEndTime(updated.endtime ?? "");
+        setVenue(updated.venue?.trim() || EVENT.venueName);
+        setAddress(updated.address?.trim() || EVENT.address);
+      }
+      setSaved(section);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to update details.");
+    } finally {
+      setSaving("");
+    }
+  };
+
+  const detailsUnchanged = home !== null && state === home.state && eventDate === home.eventdate;
+  const venueUnchanged =
+    home !== null &&
+    startTime === (home.starttime ?? "") &&
+    endTime === (home.endtime ?? "") &&
+    venue === (home.venue?.trim() || EVENT.venueName) &&
+    address === (home.address?.trim() || EVENT.address);
+
+  const field = (setter: (value: string) => void) => (e: { target: { value: string } }) => {
+    setter(e.target.value);
+    setSaved("");
+  };
+
+  const status = (section: "details" | "venue") => (
+    <>
+      {error && <p className="admin-upload__error">{error}</p>}
+      {saved === section && (
+        <p className="admin-home__success">
+          <FiCheckCircle /> Saved. The home page now shows the new details.
+        </p>
+      )}
+    </>
+  );
+
+  const body = (content: ReactNode) =>
+    loading ? (
+      <p className="admin-dashboard__loading">Loading…</p>
+    ) : !home ? (
+      <p className="admin-upload__error">{error || "No home details found in the database."}</p>
+    ) : (
+      content
+    );
+
+  return (
+    <>
+      <section className="admin-card admin-card--details">
+        <div className="admin-card__header">
+          <span className="admin-card__icon">
+            <FiCalendar size={20} />
+          </span>
+          <div className="admin-card__heading">
+            <h2>Homepage Details</h2>
+            <p className="admin-card__desc">The event date and state. They update the countdown and the date shown in the hero and venue sections. (The Schedule section has its own date, set in the Schedule card.)</p>
+          </div>
+        </div>
+
+        {body(
+          <form
+            className="admin-home__form"
+            onSubmit={(e) => {
+              void save("details", e);
+            }}
+          >
+            <div className="admin-home__row">
+              <label className="admin-login__field">
+                <span>Event date</span>
+                <div className="admin-login__input">
+                  <input type="date" name="eventdate" value={eventDate} onChange={field(setEventDate)} required />
+                </div>
+              </label>
+
+              <label className="admin-login__field">
+                <span>State</span>
+                <div className="admin-login__input">
+                  <input type="text" name="state" value={state} maxLength={100} onChange={field(setState)} required />
+                </div>
+              </label>
+            </div>
+
+            {status("details")}
+
+            <button type="submit" className="btn" disabled={saving !== "" || detailsUnchanged}>
+              {saving === "details" ? "Saving…" : "Save Changes"}
+            </button>
+          </form>,
+        )}
+      </section>
+
+      <section className="admin-card admin-card--details">
+        <div className="admin-card__header">
+          <span className="admin-card__icon">
+            <FiCalendar size={20} />
+          </span>
+          <div className="admin-card__heading">
+            <h2>Venue &amp; Time</h2>
+            <p className="admin-card__desc">The event time, venue and address. They update the schedule, venue section and map. Leave empty to use the website defaults.</p>
+          </div>
+        </div>
+
+        {body(
+          <form
+            className="admin-home__form"
+            onSubmit={(e) => {
+              void save("venue", e);
+            }}
+          >
+            <div className="admin-home__row">
+              <label className="admin-login__field">
+                <span>Start time</span>
+                <div className="admin-login__input">
+                  <input type="time" name="starttime" value={startTime} onChange={field(setStartTime)} />
+                </div>
+              </label>
+
+              <label className="admin-login__field">
+                <span>End time</span>
+                <div className="admin-login__input">
+                  <input type="time" name="endtime" value={endTime} onChange={field(setEndTime)} />
+                </div>
+              </label>
+            </div>
+
+            <label className="admin-login__field">
+              <span>Venue name (hall / building)</span>
+              <div className="admin-login__input">
+                <input type="text" name="venue" value={venue} maxLength={255} onChange={field(setVenue)} />
+              </div>
+            </label>
+
+            <label className="admin-login__field">
+              <span>Address (street, area, city, PIN)</span>
+              <div className="admin-login__input">
+                <textarea name="address" value={address} maxLength={500} rows={3} onChange={field(setAddress)} />
+              </div>
+            </label>
+
+            <p className="admin-card__desc">
+              <b>Shown on the website as:</b> {[venue.trim(), address.trim()].filter(Boolean).join(", ")}
+            </p>
+
+            {status("venue")}
+
+            <button type="submit" className="btn" disabled={saving !== "" || venueUnchanged}>
+              {saving === "venue" ? "Saving…" : "Save Changes"}
+            </button>
+          </form>,
+        )}
+      </section>
+    </>
+  );
+}
+
+interface ScheduleDraft {
+  key: number;
+  time: string;
+  title: string;
+  details: string; // one line per bullet
+}
+
+let scheduleDraftKey = 0;
+const toDrafts = (items: ScheduleItem[]): ScheduleDraft[] =>
+  items.map((item) => ({
+    key: ++scheduleDraftKey,
+    time: item.time,
+    title: item.title,
+    details: (item.description ?? []).join("\n"),
+  }));
+
+const fromDrafts = (drafts: ScheduleDraft[]): ScheduleItem[] =>
+  drafts.map((d) => {
+    const description = d.details.split("\n").map((l) => l.trim()).filter(Boolean);
+    return { time: d.time.trim(), title: d.title.trim(), ...(description.length ? { description } : {}) };
+  });
+
+// Separate from the date / venue cards: this card only edits the timetable list.
+function ScheduleSection() {
+  const [drafts, setDrafts] = useState<ScheduleDraft[]>([]);
+  const [baseline, setBaseline] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+  const [saved, setSaved] = useState("");
+
+  // Schedule date: its own value (stored separately from the home page event date), with its own load/save.
+  // Until one is saved it shows the event date, which is what the schedule section follows by default.
+  const [eventDate, setEventDate] = useState("");
+  const [savedDate, setSavedDate] = useState("");
+  const [dateSaving, setDateSaving] = useState(false);
+  const [dateError, setDateError] = useState("");
+  const [dateSaved, setDateSaved] = useState(false);
+
+  const saveDate = async (e: FormEvent) => {
+    e.preventDefault();
+    setDateSaving(true);
+    setDateSaved(false);
+    setDateError("");
+    try {
+      await updateScheduleDate(eventDate);
+      setSavedDate(eventDate);
+      setDateSaved(true);
+    } catch (err) {
+      setDateError(err instanceof Error ? err.message : "Failed to update the schedule date.");
+    } finally {
+      setDateSaving(false);
+    }
+  };
+
+  const load = (items: ScheduleItem[]) => {
+    setDrafts(toDrafts(items));
+    setBaseline(JSON.stringify(items));
+  };
+
+  useEffect(() => {
+    Promise.all([getSavedSchedule().catch((err: unknown) => err), getHomeInfo().catch(() => null)])
+      .then(([result, info]) => {
+        if (result instanceof Error) {
+          load(SCHEDULE);
+          setError(result.message);
+          return;
+        }
+        const saved = result as Awaited<ReturnType<typeof getSavedSchedule>>;
+        load(saved.items ?? SCHEDULE);
+        const date = saved.date ?? info?.eventdate ?? "";
+        setEventDate(date);
+        setSavedDate(date);
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  const change = (next: ScheduleDraft[]) => {
+    setDrafts(next);
+    setSaved("");
+  };
+  const update = (key: number, patch: Partial<ScheduleDraft>) =>
+    change(drafts.map((d) => (d.key === key ? { ...d, ...patch } : d)));
+  const move = (index: number, delta: number) => {
+    const next = [...drafts];
+    const target = index + delta;
+    if (target < 0 || target >= next.length) return;
+    [next[index], next[target]] = [next[target], next[index]];
+    change(next);
+  };
+
+  const run = async (items: ScheduleItem[] | null, message: string) => {
+    setSaving(true);
+    setSaved("");
+    setError("");
+    try {
+      await updateSchedule(items);
+      load(items ?? SCHEDULE);
+      setSaved(message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to update schedule.");
     } finally {
       setSaving(false);
     }
   };
 
-  const unchanged = home !== null && state === home.state && eventDate === home.eventdate;
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    const items = fromDrafts(drafts);
+    if (items.length === 0 || items.some((i) => !i.time || !i.title)) {
+      setError("Add at least one item, and give every item a time and a title.");
+      return;
+    }
+    void run(items, "Saved. The schedule on the home page is updated.");
+  };
+
+  const unchanged = JSON.stringify(fromDrafts(drafts)) === baseline;
 
   return (
     <section className="admin-card admin-card--details">
@@ -647,68 +933,133 @@ function HomeDetailsSection() {
           <FiCalendar size={20} />
         </span>
         <div className="admin-card__heading">
-          <h2>Homepage Details</h2>
-          <p className="admin-card__desc">The event date and state shown at the top of the home page.</p>
+          <h2>Schedule</h2>
+          <p className="admin-card__desc">
+            The "Check The Schedule" section on the home page: its date, and each item's time, title and optional
+            details (one line per bullet). This date is separate from the home page event date.
+          </p>
         </div>
       </div>
 
       {loading ? (
         <p className="admin-dashboard__loading">Loading…</p>
-      ) : !home ? (
-        <p className="admin-upload__error">{error || "No home details found in the database."}</p>
       ) : (
-        <form
-          className="admin-home__form"
-          onSubmit={(e) => {
-            void handleSubmit(e);
-          }}
-        >
-          <div className="admin-home__row">
-            <label className="admin-login__field">
-              <span>Event date</span>
-              <div className="admin-login__input">
-                <input
-                  type="date"
-                  name="eventdate"
-                  value={eventDate}
-                  onChange={(e) => {
-                    setEventDate(e.target.value);
-                    setSaved(false);
-                  }}
-                  required
-                />
-              </div>
-            </label>
+        <>
+        <form className="admin-home__form admin-schedule__date" onSubmit={(e) => void saveDate(e)}>
+          <label className="admin-login__field">
+            <span>Schedule date</span>
+            <div className="admin-login__input">
+              <input
+                type="date"
+                name="scheduledate"
+                value={eventDate}
+                onChange={(e) => {
+                  setEventDate(e.target.value);
+                  setDateSaved(false);
+                }}
+                required
+              />
+            </div>
+          </label>
+          {dateError && <p className="admin-upload__error">{dateError}</p>}
+          {dateSaved && (
+            <p className="admin-home__success">
+              <FiCheckCircle /> Saved. The schedule section now shows this date.
+            </p>
+          )}
+          <button type="submit" className="btn" disabled={dateSaving || !eventDate || eventDate === savedDate}>
+            {dateSaving ? "Saving…" : "Save Date"}
+          </button>
+        </form>
 
-            <label className="admin-login__field">
-              <span>State</span>
-              <div className="admin-login__input">
-                <input
-                  type="text"
-                  name="state"
-                  value={state}
-                  maxLength={100}
-                  onChange={(e) => {
-                    setState(e.target.value);
-                    setSaved(false);
-                  }}
-                  required
-                />
+        <form className="admin-home__form" onSubmit={handleSubmit}>
+          <div className="admin-schedule__list">
+            {drafts.map((d, index) => (
+              <div className="admin-schedule__item" key={d.key}>
+                <div className="admin-schedule__top">
+                  <label className="admin-login__field admin-schedule__time">
+                    <span>Time</span>
+                    <div className="admin-login__input">
+                      <input
+                        type="text"
+                        value={d.time}
+                        maxLength={30}
+                        placeholder="10:30 AM"
+                        onChange={(e) => update(d.key, { time: e.target.value })}
+                      />
+                    </div>
+                  </label>
+                  <label className="admin-login__field admin-schedule__title">
+                    <span>Title</span>
+                    <div className="admin-login__input">
+                      <input
+                        type="text"
+                        value={d.title}
+                        maxLength={300}
+                        onChange={(e) => update(d.key, { title: e.target.value })}
+                      />
+                    </div>
+                  </label>
+                  <div className="admin-schedule__actions">
+                    <button type="button" className="admin-schedule__icon-btn" onClick={() => move(index, -1)} disabled={index === 0} aria-label="Move up">
+                      ↑
+                    </button>
+                    <button type="button" className="admin-schedule__icon-btn" onClick={() => move(index, 1)} disabled={index === drafts.length - 1} aria-label="Move down">
+                      ↓
+                    </button>
+                    <button type="button" className="admin-schedule__icon-btn" onClick={() => change(drafts.filter((x) => x.key !== d.key))} aria-label="Delete item">
+                      <FiTrash2 size={15} />
+                    </button>
+                  </div>
+                </div>
+                <label className="admin-login__field">
+                  <span>Details (optional, one line per bullet)</span>
+                  <div className="admin-login__input">
+                    <textarea
+                      value={d.details}
+                      rows={Math.min(6, Math.max(2, d.details.split("\n").length))}
+                      onChange={(e) => update(d.key, { details: e.target.value })}
+                    />
+                  </div>
+                </label>
               </div>
-            </label>
+            ))}
           </div>
+
+          <button
+            type="button"
+            className="btn btn-outline"
+            onClick={() => change([...drafts, { key: ++scheduleDraftKey, time: "", title: "", details: "" }])}
+          >
+            + Add item
+          </button>
 
           {error && <p className="admin-upload__error">{error}</p>}
           {saved && (
             <p className="admin-home__success">
-              <FiCheckCircle /> Saved. The home page now shows the new details.
+              <FiCheckCircle /> {saved}
             </p>
           )}
 
-          <button type="submit" className="btn" disabled={saving || unchanged}>
-            {saving ? "Saving…" : "Save Changes"}
-          </button>
+          <div className="admin-schedule__footer">
+            <button type="submit" className="btn" disabled={saving || unchanged}>
+              {saving ? "Saving…" : "Save Schedule"}
+            </button>
+            <button
+              type="button"
+              className="btn btn-outline"
+              disabled={saving}
+              onClick={() => {
+                if (window.confirm("Reset the schedule to the built-in default? Your saved changes will be lost.")) {
+                  void run(null, "Reset to the default schedule.");
+                }
+              }}
+            >
+              Reset to default
+            </button>
+          </div>
         </form>
+        </>
       )}
     </section>
   );
@@ -1075,6 +1426,7 @@ export default function AdminDashboard() {
         </div>
 
         <HomeDetailsSection />
+        <ScheduleSection />
         <RegistrationsSection />
       </div>
     </div>

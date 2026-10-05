@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { FiChevronDown } from "react-icons/fi";
-import { SCHEDULE } from "../data/content";
+import { useSchedule } from "../lib/scheduleApi";
 import "./Schedule.css";
 
 export default function Schedule() {
+  const schedule = useSchedule();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
@@ -19,16 +20,16 @@ export default function Schedule() {
             This is the event schedule section, you can check the details about time, duration,
             speaker, venue &amp; more.
           </p>
-          <a className="btn schedule__date-btn" href="/#schedule-list">
-            25 April 2026
+          <a className="btn schedule__date-btn" href="#schedule-list">
+            {schedule.dateShort}
           </a>
         </div>
 
         <div className="schedule__list-wrap">
-          <h2 className="schedule__date-heading">Saturday, 25 April 2026</h2>
+          <h2 className="schedule__date-heading">{schedule.dateLong}</h2>
 
           <div id="schedule-list" className="schedule__list">
-            {SCHEDULE.map((item, index) => {
+            {schedule.items.map((item, index) => {
               const hasDetail = Boolean(item.description?.length);
               const isOpen = openIndex === index;
 

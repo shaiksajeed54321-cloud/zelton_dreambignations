@@ -163,3 +163,21 @@ button {
   background: var(--sky);
   color: var(--white);
 }
+
+/* Keep anchored sections from hiding under the fixed header */
+section[id] {
+  scroll-margin-top: 80px;
+}
+
+/* Stop wide content causing sideways scrolling (clip keeps sticky elements working) */
+body {
+  overflow-x: clip;
+}
+
+h1,
+h2,
+h3,
+p,
+li {
+  overflow-wrap: break-word;
+}

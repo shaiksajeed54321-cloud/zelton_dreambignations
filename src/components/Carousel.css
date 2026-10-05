@@ -77,3 +77,32 @@
   width: 22px;
   border-radius: 4px;
 }
+
+/* Show whole photos (many are portrait phone photos) instead of cropping them */
+.carousel__track img {
+  object-fit: contain;
+  background: #111;
+}
+
+.carousel__viewport {
+  touch-action: pan-y;
+}
+
+@media (max-width: 600px) {
+  .carousel__track img {
+    aspect-ratio: 4 / 3;
+  }
+
+  .carousel__arrow {
+    width: 44px;
+    height: 44px;
+  }
+
+  .carousel__arrow--prev {
+    left: 8px;
+  }
+
+  .carousel__arrow--next {
+    right: 8px;
+  }
+}

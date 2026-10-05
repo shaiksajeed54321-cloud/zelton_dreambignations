@@ -18,3 +18,13 @@
 .gallery__caption-suffix {
   color: var(--dark-2);
 }
+
+@media (max-width: 600px) {
+  .gallery__caption {
+    font-size: 18px;
+  }
+
+  .gallery__blocks {
+    gap: 40px;
+  }
+}

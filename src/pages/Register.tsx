@@ -3,6 +3,7 @@ import type { FormEvent } from "react";
 import { FiCheckCircle } from "react-icons/fi";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
+import { EVENT } from "../data/content";
 import { submitRegistration, type RegistrationInput } from "../lib/registrationApi";
 import "./Register.css";
 
@@ -64,7 +65,7 @@ export default function Register() {
       <main>
         <section className="register-hero">
           <div className="container">
-            <span className="eyebrow">Dream Big Mentors Meet Bengaluru-2026</span>
+            <span className="eyebrow">{EVENT.name}</span>
             <h1>Student Registration</h1>
             <p>Reserve your seat at the mentorship event &mdash; it&rsquo;s free.</p>
           </div>

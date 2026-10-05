@@ -1,18 +1,34 @@
 import type { GalleryBlock, NavLink, ScheduleItem, Speaker, StatItem } from "./types";
 
 export const LOGO_URL =
-  "https://dreambignation.org/wp-content/uploads/2019/05/DREAM-BIG-NATION-14.png";
+  "https://dreambignation.org/backup1-wordpress/wp-content/uploads/2019/05/DREAM-BIG-NATION-14.png";
 
 export const HERO_BG_URL =
-  "https://dreambignation.org/wp-content/uploads/2019/05/slide_1-1.jpg";
+  "https://dreambignation.org/backup1-wordpress/wp-content/uploads/2019/05/slide_1-1.jpg";
 
 export const STATS_BG_URL =
-  "https://dreambignation.org/wp-content/uploads/2019/05/slide_3-1.jpg";
+  "https://dreambignation.org/backup1-wordpress/wp-content/uploads/2019/05/slide_3-1.jpg";
 
 export const CTA_BG_URL =
-  "https://dreambignation.org/wp-content/uploads/2019/05/bg_background.jpg";
+  "https://dreambignation.org/backup1-wordpress/wp-content/uploads/2019/05/bg_background.jpg";
 
-export const EVENT_DATE_ISO = "2026-04-25T09:00:00+05:30";
+// =====================================================================
+// EVENT DETAILS - change everything about the event HERE, in one place.
+// The countdown, hero, schedule, venue section and map all read from this.
+// (If a date is saved in the admin dashboard, it overrides `date` below.)
+// =====================================================================
+export const EVENT = {
+  name: "Dream Big Mentors Meet Bengaluru-2026",
+  description:
+    "Connect with civil servants and academicians for early goal setting and career guidance - absolutely free.",
+  date: "2026-11-28", // YYYY-MM-DD
+  startTime: "09:00", // 24-hour HH:mm, India time (IST)
+  endTime: "13:00", // 24-hour HH:mm, India time (IST)
+  venueName: "MBA Seminar Hall, Al Ameen Educational Campus",
+  address: "Hosur Main Road, Opposite to Lalbagh Main Gate, Bengaluru-560027",
+  // Optional: paste a Google Maps share link here. Leave "" to search by venue name + address.
+  mapsLink: "",
+};
 
 export const NAV_LINKS: NavLink[] = [
   { label: "Home", href: "/#home" },
@@ -22,9 +38,9 @@ export const NAV_LINKS: NavLink[] = [
   { label: "Jobs", href: "/jobs", to: "/jobs" },
   {
     label: "More",
-    href: "/#",
+    href: "/#career-goals",
     children: [
-      { label: "Career Goals", href: "/#" },
+      { label: "Career Goals", href: "/#career-goals" },
       { label: "About Us", href: "/#organizer" },
       { label: "Contact Us", href: "/#venue" },
     ],
@@ -130,24 +146,24 @@ export const GALLERY_BLOCKS: GalleryBlock[] = [
     heading: "Inspiring Moments",
     suffix: "of 25th October Event 2025",
     images: [
-      "https://dreambignation.org/wp-content/uploads/2019/05/WhatsApp-Image-2025-11-16-at-9.33.41-PM.jpeg",
-      "https://dreambignation.org/wp-content/uploads/2019/05/WhatsApp-Image-2025-11-16-at-9.33.42-PM.jpeg",
+      "https://dreambignation.org/backup1-wordpress/wp-content/uploads/2019/05/WhatsApp-Image-2025-11-16-at-9.33.41-PM.jpeg",
+      "https://dreambignation.org/backup1-wordpress/wp-content/uploads/2019/05/WhatsApp-Image-2025-11-16-at-9.33.42-PM.jpeg",
     ],
   },
   {
     heading: "Janab Niyaz Ahmed Dafedar (Retd), District Session Judge",
     suffix: "STAR SPEAKER shared his career story, on 27th September 2025 event",
-    images: ["https://dreambignation.org/wp-content/uploads/2019/05/Speaker.png"],
+    images: ["https://dreambignation.org/backup1-wordpress/wp-content/uploads/2019/05/Speaker.png"],
   },
   {
     heading: "Inspiring Moments",
     suffix: "of 23rd August Event 2025",
     images: [
-      "https://dreambignation.org/wp-content/uploads/2019/05/WhatsApp-Image-2025-08-26-at-2.10.50-PM-scaled.jpeg",
-      "https://dreambignation.org/wp-content/uploads/2019/05/WhatsApp-Image-2025-08-26-at-2.10.47-PM-1.jpeg",
-      "https://dreambignation.org/wp-content/uploads/2019/05/WhatsApp-Image-2025-08-26-at-2.10.47-PM.jpeg",
-      "https://dreambignation.org/wp-content/uploads/2019/05/WhatsApp-Image-2025-08-26-at-2.10.51-PM-1-scaled.jpeg",
-      "https://dreambignation.org/wp-content/uploads/2019/05/WhatsApp-Image-2025-08-26-at-2.10.51-PM.jpeg",
+      "https://dreambignation.org/backup1-wordpress/wp-content/uploads/2019/05/WhatsApp-Image-2025-08-26-at-2.10.50-PM-scaled.jpeg",
+      "https://dreambignation.org/backup1-wordpress/wp-content/uploads/2019/05/WhatsApp-Image-2025-08-26-at-2.10.47-PM-1.jpeg",
+      "https://dreambignation.org/backup1-wordpress/wp-content/uploads/2019/05/WhatsApp-Image-2025-08-26-at-2.10.47-PM.jpeg",
+      "https://dreambignation.org/backup1-wordpress/wp-content/uploads/2019/05/WhatsApp-Image-2025-08-26-at-2.10.51-PM-1-scaled.jpeg",
+      "https://dreambignation.org/backup1-wordpress/wp-content/uploads/2019/05/WhatsApp-Image-2025-08-26-at-2.10.51-PM.jpeg",
     ],
   },
 ];
@@ -156,67 +172,64 @@ export const SPEAKERS: Speaker[] = [
   {
     name: "Ms. N.T. Abroo",
     role: "IAS Retd, Member, Karnataka State Minorities Commission & Director",
-    photo: "https://dreambignation.org/wp-content/uploads/2025/07/WhatsApp-Image-2025-07-17-at-10.29.51-PM-1.jpeg",
+    photo: "https://dreambignation.org/backup1-wordpress/wp-content/uploads/2025/07/WhatsApp-Image-2025-07-17-at-10.29.51-PM-1.jpeg",
   },
   {
     name: "Janab Umar Ismail Khan",
     role: "Chairman, Al Ameen Group of Institutions, Karnataka",
-    photo: "https://dreambignation.org/wp-content/uploads/2025/07/Untitled-design-9.png",
+    photo: "https://dreambignation.org/backup1-wordpress/wp-content/uploads/2025/07/Untitled-design-9.png",
   },
   {
     name: "Janab Md Mohsin",
     role: "IAS, Principal Secretary to Government of Karnataka",
-    photo: "https://dreambignation.org/wp-content/uploads/2025/07/Untitled-design-12.png",
+    photo: "https://dreambignation.org/backup1-wordpress/wp-content/uploads/2025/07/Untitled-design-12.png",
   },
   {
     name: "Mr. Nongjai Md Ali Akram Shah",
     role: "IAS 2020 Batch, currently CEO, Vijayanagara District",
-    photo: "https://dreambignation.org/wp-content/uploads/2025/07/Untitled-design-15.png",
+    photo: "https://dreambignation.org/backup1-wordpress/wp-content/uploads/2025/07/Untitled-design-15.png",
   },
   {
     name: "Dr. Ariz Ahamad",
     role: "Additional Chief Secretary, Government of Assam",
-    photo: "https://dreambignation.org/wp-content/uploads/2025/07/Untitled-design-7.png",
+    photo: "https://dreambignation.org/backup1-wordpress/wp-content/uploads/2025/07/Untitled-design-7.png",
   },
   {
     name: "Prof. AH Rajasab",
     role: "Former Vice-Chancellor, Tumkur University",
-    photo: "https://dreambignation.org/wp-content/uploads/2025/07/Untitled-design-10.png",
+    photo: "https://dreambignation.org/backup1-wordpress/wp-content/uploads/2025/07/Untitled-design-10.png",
   },
   {
     name: "Mr. PC Jaffer",
     role: "IAS, Secretary Finance, Government of Karnataka",
-    photo: "https://dreambignation.org/wp-content/uploads/2025/07/Untitled-design-13.png",
+    photo: "https://dreambignation.org/backup1-wordpress/wp-content/uploads/2025/07/Untitled-design-13.png",
   },
   {
     name: "Dr. Inayathulla",
     role: "Professor (Retd.), UVCE Bengaluru",
-    photo: "https://dreambignation.org/wp-content/uploads/2025/07/Untitled-design-16.png",
+    photo: "https://dreambignation.org/backup1-wordpress/wp-content/uploads/2025/07/Untitled-design-16.png",
   },
   {
     name: "Ms. Shamim Banu",
     role: "IAS Retd, Former Additional Chief Secretary, Government of Karnataka",
-    photo: "https://dreambignation.org/wp-content/uploads/2025/07/Untitled-design-8.png",
+    photo: "https://dreambignation.org/backup1-wordpress/wp-content/uploads/2025/07/Untitled-design-8.png",
   },
   {
     name: "Prof. Niyamatullah",
     role: "Nagarjuna Engineering College, Bengaluru",
-    photo: "https://dreambignation.org/wp-content/uploads/2025/07/Untitled-design-11.png",
+    photo: "https://dreambignation.org/backup1-wordpress/wp-content/uploads/2025/07/Untitled-design-11.png",
   },
   {
     name: "Mr. Imamuddin",
     role: "IRS, C&IT Commissioner GST, Bengaluru",
-    photo: "https://dreambignation.org/wp-content/uploads/2025/07/Untitled-design-14.png",
+    photo: "https://dreambignation.org/backup1-wordpress/wp-content/uploads/2025/07/Untitled-design-14.png",
   },
   {
     name: "Mr. Ameen Mudassir",
     role: "Motivational Speaker, Bengaluru",
-    photo: "https://dreambignation.org/wp-content/uploads/2025/07/Untitled-design-17.png",
+    photo: "https://dreambignation.org/backup1-wordpress/wp-content/uploads/2025/07/Untitled-design-17.png",
   },
 ];
-
-export const VENUE_MAP_URL =
-  "https://maps.google.com/maps?q=Al%20Ameen%20Educational%20Campus%2C%20Hosur%20Main%20Road%2C%20Opposite%20to%20Lalbagh%20Main%20Gate%2C%20Bengaluru-560027.&t=m&z=14&output=embed&iwloc=near";
 
 export const NEAR_AMENITIES = [
   "Lalbagh Main Gate",
