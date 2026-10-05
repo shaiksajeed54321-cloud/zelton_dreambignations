@@ -35,7 +35,9 @@ export function formatEventDate(date: string): { dateShort: string; dateLong: st
   const weekday = d.toLocaleDateString("en-GB", { weekday: "long", timeZone: "UTC" });
   const year = d.getUTCFullYear();
   return {
-    ...formatEventDate(date),
+    dateShort: `${day} ${month} ${year}`,
+    dateLong: `${weekday}, ${day} ${month} ${year}`,
+    dateOrdinal: `${ordinal(day)} ${month} ${year}`,
   };
 }
 
@@ -75,9 +77,7 @@ export function buildEventInfo(saved: HomeInfo | null): EventInfo {
     venueName,
     address,
     iso,
-    dateShort: `${day} ${month} ${year}`,
-    dateLong: `${weekday}, ${day} ${month} ${year}`,
-    dateOrdinal: `${ordinal(day)} ${month} ${year}`,
+    ...formatEventDate(date),
     timeRange: `${to12Hour(startTime)} – ${to12Hour(endTime)}`,
     mapUrl: `https://maps.google.com/maps?q=${query}&t=m&z=14&output=embed&iwloc=near`,
     directionsUrl: EVENT.mapsLink || `https://www.google.com/maps/dir/?api=1&destination=${query}`,
