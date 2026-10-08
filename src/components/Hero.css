@@ -50,9 +50,12 @@
 
 .hero__subtitle {
   font-size: 20px;
-  color: var(--white);
-  opacity: 0.92;
+  font-weight: 600;
+  letter-spacing: 0.03em;
   margin-bottom: 34px;
+  /* gold with a dark shadow so it stays sharp over the photo */
+  color: #ffd27a;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 18px rgba(0, 0, 0, 0.55);
 }
 
 .hero__cta {

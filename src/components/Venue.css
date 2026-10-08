@@ -48,7 +48,13 @@
   color: var(--gray);
 }
 
+.venue__amenities {
+  list-style: disc;
+  padding-left: 22px;
+}
+
 .venue__amenities li {
+  display: list-item;
   padding: 8px 0;
   border-bottom: 1px dashed var(--border);
 }
