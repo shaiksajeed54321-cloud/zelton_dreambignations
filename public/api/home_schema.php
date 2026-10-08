@@ -13,7 +13,6 @@ function ensure_home_columns(PDO $pdo): void
         'address'   => "VARCHAR(500) NOT NULL DEFAULT ''",
         'schedule'  => "MEDIUMTEXT NULL",
         'scheduledate' => "VARCHAR(10) NOT NULL DEFAULT ''",
-        'venuedate' => "VARCHAR(10) NOT NULL DEFAULT ''",
     ];
 
     $stmt = $pdo->prepare(

@@ -8,8 +8,6 @@ export interface HomeInfo {
   endtime?: string;
   venue?: string;
   address?: string;
-  /** The Venue & Time section's own date (YYYY-MM-DD). Empty = follow the event date. */
-  venuedate?: string;
 }
 
 interface HomeResponse {
@@ -31,7 +29,7 @@ export async function getHomeInfo(): Promise<HomeInfo | null> {
 
 export async function updateHomeInfo(
   id: number,
-  fields: Pick<HomeInfo, "state" | "eventdate" | "starttime" | "endtime" | "venue" | "address" | "venuedate">,
+  fields: Pick<HomeInfo, "state" | "eventdate" | "starttime" | "endtime" | "venue" | "address">,
 ): Promise<HomeInfo> {
   const res = await fetch(`${API_BASE}/update_home.php`, {
     method: "POST",
