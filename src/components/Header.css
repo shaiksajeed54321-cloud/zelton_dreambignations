@@ -343,7 +343,8 @@
 /* Text logo: bold name with a spaced tagline underneath */
 .site-header__logo {
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  text-align: center;
   line-height: 1.1;
   white-space: nowrap;
 }
@@ -362,6 +363,7 @@
   font-size: 17px;
   font-weight: 600;
   letter-spacing: 0.22em;
+  margin-right: -0.22em; /* cancels the trailing letter-space so the tag is truly centred */
   text-transform: uppercase;
   color: #ffd27a;
   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);

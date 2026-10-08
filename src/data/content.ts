@@ -136,9 +136,8 @@ export const SCHEDULE: ScheduleItem[] = [
 ];
 
 export const ORGANIZER_HIGHLIGHTS = [
-  "We have 10+ Years",
   "100+ Accomplished Mentors",
-  "50+ Colleges Across Karnataka from which students are impacting",
+  "50+ Colleges Across Karnataka from which students are participating",
 ];
 
 export const GALLERY_BLOCKS: GalleryBlock[] = [
